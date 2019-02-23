@@ -1,13 +1,11 @@
-package com.vionis.unityfastrunner;
+package com.vionis.unityfastrunner.services;
 
-import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.components.ComponentManager;
-import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.project.Project;
 import com.jetbrains.rider.projectView.nodes.ProjectModelNode;
-import org.jetbrains.annotations.NotNull;
+import com.vionis.unityfastrunner.BuildHelper;
 
 public class SelectedModuleKeeper {
 

@@ -6,35 +6,45 @@
     <description>Fast Run Unity projects. Made with love.</description>
     <depends>com.intellij.modules.rider</depends>
     <actions>
-        <action id="UnityFastRun" class="com.vionis.unityfastrunner.UnityFastRun" text="UnityFastRun"
+        <action id="UnityFastRun" class="com.vionis.unityfastrunner.actions.runners.UnityFastRun" text="UnityFastRun"
                 description="Fast run unity">
             <add-to-group group-id="RunMenu" anchor="after" relative-to-action="RunnerActions"/>
         </action>
-        <!--<action id="UnityFastRunDebug" class="com.vionis.unityfastrunner.UnityFastRunDebug" text="UnityFastDebugRun"-->
-                <!--description="Fast run debug unity">-->
-            <!--<add-to-group group-id="RunMenu" anchor="after" relative-to-action="UnityFastRun"/>-->
-        <!--</action>-->
-        <action id="BuildUnityProject" class="com.vionis.unityfastrunner.BuildUnityProject" text="Build Unity Project With This Core"
-                description="Rebuild selected projects, then build base pc unity project">
-            <add-to-group group-id="AdvancedBuildActions" anchor="before" relative-to-action="RebuildSelectionAction"/>
-        </action>
-        <action id="BuildUnityProjectDebug" class="com.vionis.unityfastrunner.BuildUnityProjectDebug" text="Build Debug Unity Project With This Core"
-                description="Rebuild selected projects, then build base pc unity project">
-            <add-to-group group-id="AdvancedBuildActions" anchor="before" relative-to-action="BuildUnityProject"/>
-        </action>
-        <action id="SelectModule" class="com.vionis.unityfastrunner.SelectModule" text="Select Module To Unity Fast Run"
-                description="If you run fast build unity, this module has will building before">
-            <add-to-group group-id="AdvancedBuildActions" anchor="before" relative-to-action="RebuildSelectionAction"/>
-        </action>
+
+        <group id="com.vionis.unityfastrunner.UnityFastRunBuild" text="Unity Build" popup="true">
+            <add-to-group group-id="SolutionExplorerPopupMenu" anchor="after" relative-to-action="AdvancedBuildActions"/>
+
+            <action id="SelectModule" class="com.vionis.unityfastrunner.actions.builders.SelectModule" text="Select Module To Unity Fast Run"
+                    description="If you run fast build unity, this module has will building before">
+            </action>
+
+            <separator/>
+
+            <action id="RebuildUnityProject" class="com.vionis.unityfastrunner.actions.builders.RebuildUnityProject" text="Rebuild Unity Project With This Core"
+                    description="Rebuild selected project, then build base pc unity project">
+            </action>
+            <action id="RebuildUnityProjectDebug" class="com.vionis.unityfastrunner.actions.builders.RebuildUnityProjectDebug" text="Rebuild Debug Unity Project With This Core"
+                    description="Rebuild selected project, then build base debug pc unity project">
+            </action>
+
+            <action id="BuildUnityProject" class="com.vionis.unityfastrunner.actions.builders.BuildUnityProject" text="Build Unity Project With This Core"
+                    description="Build selected project, then build base pc unity project">
+            </action>
+            <action id="BuildUnityProjectDebug" class="com.vionis.unityfastrunner.actions.builders.BuildUnityProjectDebug" text="Build Debug Unity Project With This Core"
+                    description="Build selected project, then build base debug pc unity project">
+            </action>
+
+        </group>
+
         <group id="com.vionis.unityfastrunner.UnityFastRunSettings" text="UnityFastRun Settings" popup="true">
             <add-to-group group-id="ToolsBasicGroup" anchor="after" relative-to-action="IdeScriptingConsole"/>
 
-            <action id="SetterPathToUnityProject" class="com.vionis.unityfastrunner.SetterPathToUnityProject" text="Set path to unity project"
+            <action id="SetterPathToUnityProject" class="com.vionis.unityfastrunner.actions.tools.SetterPathToUnityProject" text="Set path to unity project"
                     description="Set path to unity project">
 
             </action>
 
-            <action id="SetterPathToAllDlls" class="com.vionis.unityfastrunner.SetterPathToAllDlls" text="Set path to all project dlls"
+            <action id="SetterPathToAllDlls" class="com.vionis.unityfastrunner.actions.tools.SetterPathToAllDlls" text="Set path to all project dlls"
                     description="Set path to all project dlls">
 
             </action>
@@ -42,6 +52,6 @@
 
     </actions>
     <extensions defaultExtensionNs="com.intellij">
-        <applicationService serviceImplementation="com.vionis.unityfastrunner.SelectedModuleKeeper"/>
+        <applicationService serviceImplementation="com.vionis.unityfastrunner.services.SelectedModuleKeeper"/>
     </extensions>
 </idea-plugin>

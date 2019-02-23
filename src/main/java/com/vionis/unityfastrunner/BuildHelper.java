@@ -13,6 +13,7 @@ import com.jetbrains.rider.build.BuildParameters;
 import com.jetbrains.rider.build.ProjectDescriptor;
 import com.jetbrains.rider.model.BuildResultKind;
 import com.jetbrains.rider.model.BuildTarget;
+import com.jetbrains.rider.model.RebuildTarget;
 import com.jetbrains.rider.projectView.nodes.ProjectModelNode;
 import com.jetbrains.rider.projectView.nodes.ProjectModelNodeExtensionKt;
 import kotlin.TypeCastException;
@@ -31,9 +32,9 @@ public class BuildHelper {
 
     public static final BuildHelper INSTANCE = new BuildHelper();
 
-    public void BuildSelectedProjects(Project project, ProjectModelNode[] projectModelNodes, @NotNull Function1<? super BuildResultKind, Unit> onFinished){
+    public void BuildSelectedProjects(Project project, ProjectModelNode[] projectModelNodes, boolean isRebuild, @NotNull Function1<? super BuildResultKind, Unit> onFinished){
         if (project != null && projectModelNodes != null) {
-            this.actionPerformedOnMultipleInternal(projectModelNodes, project, onFinished);
+            this.actionPerformedOnMultipleInternal(projectModelNodes, project, isRebuild, onFinished);
         }
     }
 
@@ -70,7 +71,7 @@ public class BuildHelper {
         return !ProjectModelNodeExtensionKt.isProject(item) && !ProjectModelNodeExtensionKt.isSolution(item) && !ProjectModelNodeExtensionKt.isSolutionFolder(item) ? null : item;
     }
 
-    private void actionPerformedOnMultipleInternal(@NotNull ProjectModelNode[] items, @NotNull Project project, @NotNull Function1<? super BuildResultKind, Unit> onFinished) {
+    private void actionPerformedOnMultipleInternal(@NotNull ProjectModelNode[] items, @NotNull Project project, boolean isRebuild, @NotNull Function1<? super BuildResultKind, Unit> onFinished) {
         Intrinsics.checkParameterIsNotNull(items, "items");
         Intrinsics.checkParameterIsNotNull(project, "project");
         ProjectModelNode[] var6 = items;
@@ -118,7 +119,7 @@ public class BuildHelper {
         Object var24 = var21.getComponent(BuildHost.class);
         if (var24 != null) {
             BuildHost var19 = (BuildHost)var24;
-            if (!var19.requestBuild(new BuildParameters(new BuildTarget(), var5, false, false), onFinished)) {
+            if (!var19.requestBuild(new BuildParameters(isRebuild ? new RebuildTarget() : new BuildTarget(), var5, false, false), onFinished)) {
                 (new Notification("Build", "Another build is already in progress", "Another build is already in progress", NotificationType.WARNING)).notify(project);
             }
         }

@@ -1,7 +1,8 @@
-package com.vionis.unityfastrunner;
+package com.vionis.unityfastrunner.actions.runners;
 
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
+import com.vionis.unityfastrunner.UnityFastRunner;
 
 public class UnityFastRun extends AnAction {
 

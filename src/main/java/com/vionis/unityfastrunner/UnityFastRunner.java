@@ -2,7 +2,6 @@ package com.vionis.unityfastrunner;
 
 import com.intellij.ide.util.PropertiesComponent;
 import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.ProgressManager;
@@ -13,6 +12,9 @@ import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.ui.popup.util.PopupUtil;
 import com.jetbrains.rider.model.BuildResultKind;
 import com.jetbrains.rider.projectView.nodes.ProjectModelNode;
+import com.vionis.unityfastrunner.actions.tools.SetterPathToAllDlls;
+import com.vionis.unityfastrunner.actions.tools.SetterPathToUnityProject;
+import com.vionis.unityfastrunner.services.SelectedModuleKeeper;
 import kotlin.Unit;
 import org.jetbrains.annotations.NotNull;
 
@@ -38,7 +40,7 @@ public class UnityFastRunner {
             return;
         }
 
-        BuildHelper.INSTANCE.BuildSelectedProjects(project, projectModelNodes, (buildResultKind -> {
+        BuildHelper.INSTANCE.BuildSelectedProjects(project, projectModelNodes, false, (buildResultKind -> {
             if (buildResultKind.equals(BuildResultKind.Successful) || buildResultKind.equals(BuildResultKind.HasWarnings))
                 RunUnity(project, e, isDebug);
 

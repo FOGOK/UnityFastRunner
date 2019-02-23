@@ -1,4 +1,4 @@
-package com.vionis.unityfastrunner;
+package com.vionis.unityfastrunner.actions.tools;
 
 import com.intellij.ide.util.PropertiesComponent;
 import com.intellij.openapi.actionSystem.AnAction;
@@ -7,6 +7,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.MessageType;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.ui.popup.util.PopupUtil;
+import com.vionis.unityfastrunner.Markdown;
 
 public class SetterPathToAllDlls extends AnAction {
 

@@ -13,6 +13,9 @@ import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.ui.popup.util.PopupUtil;
 import com.intellij.pom.Navigatable;
 import com.jetbrains.rider.model.BuildResultKind;
+import com.vionis.unityfastrunner.actions.tools.SetterPathToAllDlls;
+import com.vionis.unityfastrunner.actions.tools.SetterPathToUnityProject;
+import com.vionis.unityfastrunner.services.SelectedModuleKeeper;
 import kotlin.Unit;
 import org.jetbrains.annotations.NotNull;
 
@@ -22,12 +25,7 @@ public class UnityProjectBuilder {
 
     public static final UnityProjectBuilder INSTANCE = new UnityProjectBuilder();
 
-    public void RunAction(AnActionEvent e, boolean isDebug) {
-        final Navigatable nav = e.getData(CommonDataKeys.NAVIGATABLE);
-        if (nav == null) {
-            Messages.showErrorDialog("Please select one module", "Oh no");
-            return;
-        }
+    public void RunAction(AnActionEvent e, boolean isDebug, boolean isRebuild) {
 
         final Project project = e.getProject();
         if (project == null) {
@@ -39,7 +37,12 @@ public class UnityProjectBuilder {
         SelectedModuleKeeper keeper = ServiceManager.getService(SelectedModuleKeeper.class);
         keeper.setDataContext(e.getDataContext());
 
-        BuildHelper.INSTANCE.BuildSelectedProjects(keeper.getProject(), keeper.getProjectModelNodes(), (buildResultKind -> {
+        if (keeper.getProjectModelNodes() == null) {
+            Messages.showErrorDialog("Please select one or more module(s)", "Oh no");
+            return;
+        }
+
+        BuildHelper.INSTANCE.BuildSelectedProjects(keeper.getProject(), keeper.getProjectModelNodes(), isRebuild, (buildResultKind -> {
 
             if (buildResultKind.equals(BuildResultKind.Successful) || buildResultKind.equals(BuildResultKind.HasWarnings))
                 BuildUnity(project, isDebug);
