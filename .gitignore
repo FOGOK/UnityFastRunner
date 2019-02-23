@@ -1,0 +1,4 @@
+#ignore thumbnails 
+.gradle
+.idea
+build

@@ -1,0 +1,32 @@
+apply plugin: 'java'
+apply plugin: 'org.jetbrains.intellij'
+
+buildscript {
+    repositories {
+        mavenCentral()
+        maven {
+            url "https://oss.sonatype.org/content/repositories/snapshots/"
+        }
+        maven {
+            url 'http://dl.bintray.com/jetbrains/intellij-plugin-service'
+        }
+
+    }
+    dependencies {
+        classpath "org.jetbrains.intellij.plugins:gradle-intellij-plugin:0.2.0-SNAPSHOT"
+    }
+}
+
+
+wrapper {
+    gradleVersion = '4.10'
+    distributionUrl = "https://cache-redirector.jetbrains.com/services.gradle.org/distributions/gradle-${gradleVersion}-all.zip"
+}
+
+intellij {
+    version 'RD-2018.2'
+}
+
+instrumentCode {
+    project.file('lib/javac2.jar')
+}
