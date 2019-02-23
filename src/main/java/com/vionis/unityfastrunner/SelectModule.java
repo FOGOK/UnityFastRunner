@@ -15,6 +15,6 @@ public class SelectModule extends AnAction {
             return;
         }
 
-        ServiceManager.getService(SelectedModuleKeeper.class).setLastActionEventToRebuild(e);
+        ServiceManager.getService(SelectedModuleKeeper.class).setDataContext(e.getDataContext());
     }
 }

@@ -3,6 +3,7 @@ package com.vionis.unityfastrunner;
 import com.intellij.notification.Notification;
 import com.intellij.notification.NotificationType;
 import com.intellij.openapi.actionSystem.AnActionEvent;
+import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.components.ComponentManager;
 import com.intellij.openapi.project.Project;
@@ -30,23 +31,13 @@ public class BuildHelper {
 
     public static final BuildHelper INSTANCE = new BuildHelper();
 
-    public void BuildSelectedProjects(AnActionEvent e, @NotNull Function1<? super BuildResultKind, Unit> onFinished){
-        if (e != null) {
-            DataContext dataContext = e.getDataContext();
-            if (dataContext != null) {
-                Project project = e.getProject();
-                if (project != null) {
-                    Intrinsics.checkExpressionValueIsNotNull(dataContext, "dataContext");
-                    ProjectModelNode[] var6 = this.getItems(dataContext);
-                    Intrinsics.checkExpressionValueIsNotNull(project, "project");
-                    this.actionPerformedOnMultipleInternal(var6, project, onFinished);
-                }
-
-            }
+    public void BuildSelectedProjects(Project project, ProjectModelNode[] projectModelNodes, @NotNull Function1<? super BuildResultKind, Unit> onFinished){
+        if (project != null && projectModelNodes != null) {
+            this.actionPerformedOnMultipleInternal(projectModelNodes, project, onFinished);
         }
     }
 
-    private final ProjectModelNode[] getItems(@NotNull DataContext dataContext) {
+    public static final ProjectModelNode[] getItems(@NotNull DataContext dataContext) {
         ProjectModelNode[] var4 = ProjectModelNodeExtensionKt.getBackendProjectModelNodes(dataContext, true);
         ProjectModelNode[] var7 = var4;
         Collection var8 = (Collection)(new ArrayList(var4.length));
@@ -54,7 +45,7 @@ public class BuildHelper {
 
         for(int var10 = 0; var10 < var9; ++var10) {
             ProjectModelNode var11 = var7[var10];
-            ProjectModelNode var17 = this.getItemInternal(var11);
+            ProjectModelNode var17 = getItemInternal(var11);
             var8.add(var17);
         }
 
@@ -74,7 +65,7 @@ public class BuildHelper {
         }
     }
 
-    private ProjectModelNode getItemInternal(@NotNull ProjectModelNode item) {
+    private static ProjectModelNode getItemInternal(@NotNull ProjectModelNode item) {
         Intrinsics.checkParameterIsNotNull(item, "item");
         return !ProjectModelNodeExtensionKt.isProject(item) && !ProjectModelNodeExtensionKt.isSolution(item) && !ProjectModelNodeExtensionKt.isSolutionFolder(item) ? null : item;
     }

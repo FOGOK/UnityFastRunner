@@ -36,8 +36,10 @@ public class UnityProjectBuilder {
         }
 
 
-        ServiceManager.getService(SelectedModuleKeeper.class).setLastActionEventToRebuild(e);
-        BuildHelper.INSTANCE.BuildSelectedProjects(e, (buildResultKind -> {
+        SelectedModuleKeeper keeper = ServiceManager.getService(SelectedModuleKeeper.class);
+        keeper.setDataContext(e.getDataContext());
+
+        BuildHelper.INSTANCE.BuildSelectedProjects(keeper.getProject(), keeper.getProjectModelNodes(), (buildResultKind -> {
 
             if (buildResultKind.equals(BuildResultKind.Successful) || buildResultKind.equals(BuildResultKind.HasWarnings))
                 BuildUnity(project, isDebug);

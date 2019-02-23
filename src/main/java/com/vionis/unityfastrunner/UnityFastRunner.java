@@ -2,6 +2,7 @@ package com.vionis.unityfastrunner;
 
 import com.intellij.ide.util.PropertiesComponent;
 import com.intellij.openapi.actionSystem.AnActionEvent;
+import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.ProgressManager;
@@ -11,6 +12,7 @@ import com.intellij.openapi.ui.MessageType;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.ui.popup.util.PopupUtil;
 import com.jetbrains.rider.model.BuildResultKind;
+import com.jetbrains.rider.projectView.nodes.ProjectModelNode;
 import kotlin.Unit;
 import org.jetbrains.annotations.NotNull;
 
@@ -24,21 +26,19 @@ public class UnityFastRunner {
     public static final UnityFastRunner INSTANCE = new UnityFastRunner();
 
     public void RunAction(AnActionEvent e, boolean isDebug) {
-        Project project = e.getProject();
-        if (project == null) {
-            Messages.showErrorDialog("Current project is null", "Oh no");
-            return;
-        }
 
-        AnActionEvent lastEvent = ServiceManager.getService(SelectedModuleKeeper.class).getLastActionEventToRebuild();
-        if (lastEvent == null) {
+        SelectedModuleKeeper keeper = ServiceManager.getService(SelectedModuleKeeper.class);
+        Project project = keeper.getProject();
+        ProjectModelNode[] projectModelNodes = keeper.getProjectModelNodes();
+
+        if (project == null || projectModelNodes == null) {
             Messages.showWarningDialog("Please select target core project in Solution Explorer, " +
                     "click right mouse btn, select \"Advanced Build Actions\", " +
                     "and click to \"Build Unity Project With This Core\"", "Hmm");
             return;
         }
 
-        BuildHelper.INSTANCE.BuildSelectedProjects(lastEvent, (buildResultKind -> {
+        BuildHelper.INSTANCE.BuildSelectedProjects(project, projectModelNodes, (buildResultKind -> {
             if (buildResultKind.equals(BuildResultKind.Successful) || buildResultKind.equals(BuildResultKind.HasWarnings))
                 RunUnity(project, e, isDebug);
 
