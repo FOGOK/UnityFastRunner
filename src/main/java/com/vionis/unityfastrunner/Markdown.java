@@ -57,13 +57,13 @@ public class Markdown {
                 if (!file.getName().split("\\.")[1].equals("dll") && !file.getName().split("\\.")[1].equals("pdb"))
                     continue;
 
-                InputStream in = new FileInputStream(file);
                 String outPath = targetLocation+"/"+file.getName();
-                OutputStream out = new FileOutputStream(outPath);
-
 
                 if (Files.equal(file, new File(outPath)))
                     continue;
+
+                InputStream in = new FileInputStream(file);
+                OutputStream out = new FileOutputStream(outPath);
 
                 // Copy the bits from input stream to output stream
                 byte[] buf = new byte[1024];
