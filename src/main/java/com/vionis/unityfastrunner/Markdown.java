@@ -1,13 +1,11 @@
 package com.vionis.unityfastrunner;
 
+import com.google.common.io.Files;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.util.ui.UIUtil;
 
 import java.io.*;
 import java.nio.charset.Charset;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.Arrays;
 import java.util.stream.Collectors;
 
 public class Markdown {
@@ -63,7 +61,8 @@ public class Markdown {
                 String outPath = targetLocation+"/"+file.getName();
                 OutputStream out = new FileOutputStream(outPath);
 
-                if (sameContent(file.toPath(), new File(outPath).toPath()))
+
+                if (Files.equal(file, new File(outPath)))
                     continue;
 
                 // Copy the bits from input stream to output stream
@@ -78,28 +77,7 @@ public class Markdown {
         }
     }
 
-    static boolean sameContent(Path file1, Path file2) throws IOException {
-        final long size = Files.size(file1);
-        if (size != Files.size(file2))
-            return false;
 
-        if (size < 4096)
-            return Arrays.equals(Files.readAllBytes(file1), Files.readAllBytes(file2));
-
-        try (InputStream is1 = Files.newInputStream(file1);
-             InputStream is2 = Files.newInputStream(file2)) {
-            // Compare byte-by-byte.
-            // Note that this can be sped up drastically by reading large chunks
-            // (e.g. 16 KBs) but care must be taken as InputStream.read(byte[])
-            // does not neccessarily read a whole array!
-            int data;
-            while ((data = is1.read()) != -1)
-                if (data != is2.read())
-                    return false;
-        }
-
-        return true;
-    }
 
 
 }
