@@ -1,12 +1,9 @@
 package com.vionis.unityfastrunner.actions.tools;
 
-import com.intellij.ide.util.PropertiesComponent;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.ui.MessageType;
 import com.intellij.openapi.ui.Messages;
-import com.intellij.openapi.ui.popup.util.PopupUtil;
 import com.vionis.unityfastrunner.Markdown;
 
 public class SetterPathToUnityProject extends AnAction {
@@ -21,19 +18,6 @@ public class SetterPathToUnityProject extends AnAction {
             return;
         }
 
-        String currentUnityStorePath = PropertiesComponent.getInstance(project).getValue(UnityStoreKey, "");
-
-        String unityStorePathFromDialog = Messages.showInputDialog("Please set path to unity project", "Hm", Messages.getQuestionIcon(), currentUnityStorePath, null);
-        if (unityStorePathFromDialog == null || unityStorePathFromDialog.equals("") || currentUnityStorePath.equals(unityStorePathFromDialog))
-            return;
-
-        if (!Markdown.IsCorrectDirectory(unityStorePathFromDialog))
-        {
-            Messages.showErrorDialog("Bad path to unity project: \"" + unityStorePathFromDialog + "\". Please set correct path.", "Oh no");
-            return;
-        }
-
-        PropertiesComponent.getInstance(project).setValue(UnityStoreKey, unityStorePathFromDialog);
-        PopupUtil.showBalloonForActiveFrame("Success set new unity project path to \"" + unityStorePathFromDialog + "\"", MessageType.INFO);
+        VarSetter.SetNewVar(project, "path to unity project", UnityStoreKey, Markdown::IsCorrectDirectory);
     }
 }

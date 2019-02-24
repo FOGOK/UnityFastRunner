@@ -14,6 +14,7 @@ import com.intellij.openapi.ui.popup.util.PopupUtil;
 import com.intellij.pom.Navigatable;
 import com.jetbrains.rider.model.BuildResultKind;
 import com.vionis.unityfastrunner.actions.tools.SetterPathToAllDlls;
+import com.vionis.unityfastrunner.actions.tools.SetterPathToUnityFastRunnerScripts;
 import com.vionis.unityfastrunner.actions.tools.SetterPathToUnityProject;
 import com.vionis.unityfastrunner.services.SelectedModuleKeeper;
 import kotlin.Unit;
@@ -69,6 +70,15 @@ public class UnityProjectBuilder {
             return;
         }
 
+
+        String currentPathToScripts = PropertiesComponent.getInstance(project).getValue(SetterPathToUnityFastRunnerScripts.UnityScriptsKey, "");
+        if (!Markdown.IsCorrectDirectory(currentPathToScripts))
+        {
+            Messages.showErrorDialog("Bad path to unity fast runner scripts: \"" + currentPathToScripts + "\". Please set " +
+                    "correct path to unity fast runner scripts in Tools -> UnityFastRun Settings -> Set path to unity fast runner scripts", "Oh no");
+            return;
+        }
+
         ProgressManager.getInstance().run(new Task.Backgroundable(project, "Building Unity Project") {
             @Override
             public void run(@NotNull final ProgressIndicator progressIndicator) {
@@ -76,15 +86,12 @@ public class UnityProjectBuilder {
                 progressIndicator.setFraction(0.5f);
 
                 //build unity project
-                final String commandToBuildUnity = currentUnityPath + (isDebug ? "\\build_debug.bat" : "\\build.bat");
+                final String commandToBuildUnity = currentPathToScripts + (isDebug ? "\\build_debug.bat" : "\\build.bat");
                 final int resultCode;
                 try {
-                    ProcessBuilder builder = new ProcessBuilder(
-                            "cmd.exe", "/c",  commandToBuildUnity);
-                    Process p = builder.start();
+                    Process p = Runtime.getRuntime().exec(commandToBuildUnity);
                     p.waitFor(10, TimeUnit.MINUTES);
                     resultCode = p.exitValue();
-
                 } catch (Exception e) {
                     PopupUtil.showBalloonForActiveFrame("Exception in execute unity build: " + e, MessageType.ERROR);
                     return;

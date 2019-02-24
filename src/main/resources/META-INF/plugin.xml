@@ -1,9 +1,9 @@
 <idea-plugin>
     <id>com.vionis.unityfastrunner</id>
     <name>Unity Fast Runner</name>
-    <version>1.0</version>
-    <vendor url="https://vk.com/mnvrtx">MoonVortex</vendor>
-    <description>Fast Run Unity projects. Made with love.</description>
+    <version>0.1</version>
+    <vendor url="https://t.me/mnvrtx">MoonVortex</vendor>
+    <description>Fast Run Unity projects. Made with love. WARNING!!! Windows only</description>
     <depends>com.intellij.modules.rider</depends>
     <actions>
         <action id="UnityFastRun" class="com.vionis.unityfastrunner.actions.runners.UnityFastRun" text="UnityFastRun"
@@ -38,6 +38,11 @@
 
         <group id="com.vionis.unityfastrunner.UnityFastRunSettings" text="UnityFastRun Settings" popup="true">
             <add-to-group group-id="ToolsBasicGroup" anchor="after" relative-to-action="IdeScriptingConsole"/>
+
+            <action id="SetterPathToUnityFastRunnerScripts" class="com.vionis.unityfastrunner.actions.tools.SetterPathToUnityFastRunnerScripts" text="Set path to unity fast runner scripts"
+                    description="Set path to unity fast runner scripts">
+
+            </action>
 
             <action id="SetterPathToUnityProject" class="com.vionis.unityfastrunner.actions.tools.SetterPathToUnityProject" text="Set path to unity project"
                     description="Set path to unity project">

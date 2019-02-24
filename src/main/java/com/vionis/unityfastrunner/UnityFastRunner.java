@@ -13,6 +13,7 @@ import com.intellij.openapi.ui.popup.util.PopupUtil;
 import com.jetbrains.rider.model.BuildResultKind;
 import com.jetbrains.rider.projectView.nodes.ProjectModelNode;
 import com.vionis.unityfastrunner.actions.tools.SetterPathToAllDlls;
+import com.vionis.unityfastrunner.actions.tools.SetterPathToUnityFastRunnerScripts;
 import com.vionis.unityfastrunner.actions.tools.SetterPathToUnityProject;
 import com.vionis.unityfastrunner.services.SelectedModuleKeeper;
 import kotlin.Unit;
@@ -35,8 +36,8 @@ public class UnityFastRunner {
 
         if (project == null || projectModelNodes == null) {
             Messages.showWarningDialog("Please select target core project in Solution Explorer, " +
-                    "click right mouse btn, select \"Advanced Build Actions\", " +
-                    "and click to \"Build Unity Project With This Core\"", "Hmm");
+                    "click right mouse btn, select \"Unity Build\", " +
+                    "and click to \"Build Unity Project With This Core\" or \"Select Module To Unity Fast Run\"", "Hmm");
             return;
         }
 
@@ -69,8 +70,16 @@ public class UnityFastRunner {
         if (!Markdown.IsCorrectFile(currentPathToGame))
         {
             Messages.showErrorDialog("Bad path to unity game: \"" + currentPathToGame + "\". Please select target core project in Solution Explorer, " +
-                    "click right mouse btn, select \"Advanced Build Actions\", " +
-                    "and click to \"Build Unity Project With This Core\"", "Oh no");
+                    "click right mouse btn, select \"Unity Build\", " +
+                    "and click to \"Build Unity Project With This Core\" or \"Select Module To Unity Fast Run\"", "Oh no");
+            return;
+        }
+
+        String currentPathToScripts = PropertiesComponent.getInstance(project).getValue(SetterPathToUnityFastRunnerScripts.UnityScriptsKey, "");
+        if (!Markdown.IsCorrectDirectory(currentPathToScripts))
+        {
+            Messages.showErrorDialog("Bad path to unity fast runner scripts: \"" + currentPathToScripts + "\". Please set " +
+                    "correct path to unity fast runner scripts in Tools -> UnityFastRun Settings -> Set path to unity fast runner scripts", "Oh no");
             return;
         }
 
@@ -90,12 +99,12 @@ public class UnityFastRunner {
 
                 try {
                     Markdown.CopyDllFiles(sourceLocation, targetLocation, indicator);
-                } catch (IOException e) {
+                } catch (Exception e) {
                     PopupUtil.showBalloonForActiveFrame("Exception in copy dlls: " + e, MessageType.ERROR);
                     return;
                 }
 
-                String commandToRepackAssets = currentUnityPath + "\\updateDefs.bat";
+                String commandToRepackAssets = currentPathToScripts + "\\prepare_before_run.bat";
                 final int resultCode;
                 try {
                     ProcessBuilder builder = new ProcessBuilder(
