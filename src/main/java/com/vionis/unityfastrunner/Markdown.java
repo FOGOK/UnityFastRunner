@@ -54,12 +54,18 @@ public class Markdown {
                 progressIndicator.setFraction(i / (double)files.length * 0.9);
                 File file = files[i];
 
-                if (!file.getName().split("\\.")[1].equals("dll") && !file.getName().split("\\.")[1].equals("pdb"))
+                String[] fileNameParts = file.getName().split("\\.");
+                if ((!fileNameParts[1].equals("dll") && !fileNameParts[1].equals("pdb")) || fileNameParts.length > 2)
                     continue;
 
                 String outPath = targetLocation+"/"+file.getName();
 
-                if (Files.equal(file, new File(outPath)))
+                File fileInUnity = new File(outPath);
+
+                if (!fileInUnity.exists())
+                    continue;
+
+                if (Files.equal(file, fileInUnity))
                     continue;
 
                 InputStream in = new FileInputStream(file);
