@@ -119,7 +119,7 @@ public class BuildHelper {
         Object var24 = var21.getComponent(BuildHost.class);
         if (var24 != null) {
             BuildHost var19 = (BuildHost)var24;
-            if (!var19.requestBuild(new BuildParameters(isRebuild ? new RebuildTarget() : new BuildTarget(), var5, false, false), onFinished)) {
+            if (!var19.requestBuild(new BuildParameters(isRebuild ? new RebuildTarget() : new BuildTarget(), var5, false, false, !isRebuild), onFinished)) {
                 (new Notification("Build", "Another build is already in progress", "Another build is already in progress", NotificationType.WARNING)).notify(project);
             }
         }
