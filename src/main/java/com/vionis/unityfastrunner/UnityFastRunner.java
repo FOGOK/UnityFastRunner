@@ -110,7 +110,7 @@ public class UnityFastRunner {
                     ProcessBuilder builder = new ProcessBuilder(
                             "cmd.exe", "/c",  commandToRepackAssets);
                     Process p = builder.start();
-                    p.waitFor(10, TimeUnit.MINUTES);
+                    p.waitFor(10, TimeUnit.SECONDS);
                     resultCode = p.exitValue();
 
                 } catch (Exception e) {

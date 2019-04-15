@@ -25,6 +25,7 @@ wrapper {
 
 intellij {
     version 'RD-2018.2'
+    intellij.updateSinceUntilBuild false
 }
 
 instrumentCode {
